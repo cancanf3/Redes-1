@@ -12,8 +12,28 @@ void error (const char *msg) {
     exit(1);
 }
 
-void dostuff (int sock);
+void sigHandler() {
+    int childStatus;
+    wait(&childStatus);
+}
+
+void dostuff (int sock) {
+   int n;
+   char buffer[256];
+      
+   bzero(buffer,256);
+   n = read(sock,buffer,255);
+   if (n < 0) error("ERROR reading from socket");
+   printf("Here is the message: %s\n",buffer);
+   n = write(sock,"I got your message",18);
+   if (n < 0) error("ERROR writing to socket");
+}
+
+
 int main (int argc, char *argv[]) {
+
+    signal(SIGCHLD, sigHandler);
+
     int sock_fd, newsock_fd, port_no, pid;
     socklen_t client_len;
     struct sockaddr_in server_addr, client_addr;
@@ -39,7 +59,7 @@ int main (int argc, char *argv[]) {
 
     }
 
-    if (port_no >= 0) {
+    if (port_no <= 0) {
         port_no = 7557;         // Port by default
     }
 
@@ -58,38 +78,15 @@ int main (int argc, char *argv[]) {
     listen(sock_fd,5);
     client_len = sizeof(client_addr);
 
-
     while(1) {
-
         newsock_fd = accept(sock_fd, (struct sockaddr *) &client_addr, &client_len );
         if ( newsock_fd < 0)
             error("Error: on accept.");
 
-        pid = fork();
-        if ( pid < 0 )
-            error("Error: on fork.");
 
-        if ( pid == 0 ) {
-            close(sock_fd);
-            dostuff(newsock_fd);
-            exit(0);
-        }
-        else {
-            close(newsock_fd);
-        }
+        dostuff(newsock_fd);
+        close(newsock_fd);
     }
     close(sock_fd);
     return 0;
-}
-
-void dostuff (int sock) {
-   int n;
-   char buffer[256];
-      
-   bzero(buffer,256);
-   n = read(sock,buffer,255);
-   if (n < 0) error("ERROR reading from socket");
-   printf("Here is the message: %s\n",buffer);
-   n = write(sock,"I got your message",18);
-   if (n < 0) error("ERROR writing to socket");
 }
