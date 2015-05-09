@@ -114,22 +114,33 @@ char * protocol(char * msg) {
     //  GET CHAIR x y                                    ~ Peticion de reservacion
 
     // Respond:
-    //  14 ACCEPTED  OFFER                               ~ Acepta la peticion
-    //  ?? DECLINED  OFFER xx yy yy xx yy yy xx yy yy    ~ Rechazar reservacion (El largo del mensaje se calcula en tiempo de corrida)
-    //  15 IMPOSIBLE OFFER                               ~ No hay oferta disponible, vagon full
+    //  14 ACCEPTED     OFFER                               ~ Acepta la peticion
+    //  ?? DECLINED     OFFER xx yy yy xx yy yy xx yy yy    ~ Rechazar reservacion (El largo del mensaje se calcula en tiempo de corrida)
+    //  15 IMPOSIBLE    OFFER                               ~ No hay oferta disponible, vagon full
+    //  17 NONEXISTENT  OFFER                               ~ La peticion tiene numero de asientos por fuera de los limites del vagon
+    //  17 CORRUPTED    MESSAGE                             ~ La peticion no pertenece al protocolo
     Query   query;
     Query   respond;
-    char    *accept    = "15 ACCEPTED OFFER";
-    char    *imposible = "15 IMPOSIBLE OFFER";
-    char    *decline   = "DECLINED OFFER ";
+    char    *accept         = "15 ACCEPTED OFFER";
+    char    *imposible      = "15 IMPOSIBLE OFFER";
+    char    *decline        = "DECLINED OFFER ";
+    char    *nonexistent    = "17 NONEXISTENT OFFER";
+    char    *corrupt        = "17 CORRUPTED MESSAGE";
     char    *aux;
     int     offer[2];
+
+    printf("%s\n", msg);
+    if ( strncmp(msg,"GET CHAIR",9) ) {
+        aux = corrupt;
+        return aux;
+    }
 
     query.msg       = 1;
     offer[0]        = strtol(msg+10, &aux, 10);
     offer[1]        = strtol(aux+1, NULL, 10);
     query.offer     = offer;
-    respond         = db_handler(query);   
+    respond         = db_handler(query);
+
 
     switch (respond.msg) {
         case 1  :
@@ -137,6 +148,9 @@ char * protocol(char * msg) {
             break;
         case -1 :
             aux = imposible;
+            break;
+        case -2 :
+            aux = nonexistent;
             break;
         case 0  :
             aux = (char *)malloc((sizeof(char)*2+1)*respond.size_offer

@@ -18,21 +18,29 @@ void initialize() {
 
 /* Funcion que administra la reserva de Vagones 
  * db_hanlder  (1 [xx yy] ) -> accepto: 1 NULL 
- * | Ocupado: 0 {xx yy yy yy | xx yy | xx yy ..} 
+ * | Ocupado: 0 xx xx xx xx xx 
  * | Full: -1 NULL
+ * | Fuera de rango: -2 NULL
  */
 
 Query db_handler(Query q){
     Query respond;
 
-    if (available == 0) {                                           // El vagon esta full
+    if (q.offer[0] > 9 || q.offer[1] > 3 || q.offer[0] < 0 || q.offer[1] < 0) { // La peticion se encuentra fuera de rango 
+
+        respond.msg         = -2;
+        respond.offer       = NULL;
+        respond.size_offer  = 0;
+
+    }
+    else if (available == 0) {                                                  // El vagon esta full
 
         respond.msg         = -1;
         respond.offer       = NULL;
         respond.size_offer  = 0;
 
     }
-    else if(db[q.offer[0]][q.offer[1]] == 0) {                      // La reserva se realizo exitosamente
+    else if(db[q.offer[0]][q.offer[1]] == 0) {                                  // La reserva se realizo exitosamente
 
       db[q.offer[0]][q.offer[1]]    = 1;
       respond.msg                   = 1;
@@ -41,7 +49,7 @@ Query db_handler(Query q){
       available                    -= 1;
 
     }
-    else {                                                          // El puesto esta ocupado, se devuelve el mapa del vagon
+    else {                                                                      // El puesto esta ocupado, se devuelve el mapa del vagon
         int *aux = (int *)malloc(sizeof(int)*available);
         int k    = 0;
 
