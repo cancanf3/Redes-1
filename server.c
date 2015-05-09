@@ -8,37 +8,13 @@
 #include <getopt.h>
 #include "db_handler.h"
 
-void error (const char *msg) {
-    perror(msg);
-    exit(1);
-}
 
-void sigHandler () {
-    int childStatus;
-    wait(&childStatus);
-}
-
-void  queryHandler (int sock) {
-   int n;
-   char buffer[256];
-
-
-   bzero(buffer,256);
-   n = read(sock,buffer,255);
-   if (n < 0) 
-    error("Error: reading from socket");
-    
-   protocol(buffer);
-
-   n = write(sock,"I got your message",18);
-   if (n < 0) 
-    error("Error: writing to socket");
-}
+char *protocol (char *);
+void error(const char *);
+void queryHandler(int);
 
 
 int main (int argc, char *argv[]) {
-
-    signal(SIGCHLD, sigHandler);
 
     int sock_fd, newsock_fd, port_no, pid;
     socklen_t client_len;
@@ -98,25 +74,52 @@ int main (int argc, char *argv[]) {
     return 0;
 }
 
+void error (const char *msg) {
+    perror(msg);
+    exit(1);
+}
 
+void  queryHandler (int sock) {
+   int n;
+   char buffer[256];
+   char *buffers;
+
+   bzero(buffer,256);
+   n = read(sock,buffer,255);
+   if (n < 0) 
+    error("Error: reading from socket");
+   
+   buffers = protocol(buffer);
+
+   n = write(sock,"I got your message",18);
+   if (n < 0) 
+    error("Error: writing to socket");
+}
 
 char * protocol(char * msg) {
     // Query:
-    //9  GET CHAIR xx yy                              ~ Peticion de reservacion
+    //GET CHAIR x y                              ~ Peticion de reservacion
 
     // Respond:
-    //14 ACCEPTED OFFER
-    //14 DECLINED OFFER xx yy yy xx yy yy xx yy yy    ~ Rechazar reservacion
-    //15 IMPOSIBLE OFFER                              ~ No hay oferta disponible, vagon full
+    //ACCEPTED  OFFER
+    //DECLINED  OFFER xx yy yy xx yy yy xx yy yy    ~ Rechazar reservacion
+    //IMPOSIBLE OFFER                              ~ No hay oferta disponible, vagon full
     Query query;
     Query respond;
-    char *accept    = "14 ACCEPTED OFFER";
-    char *imposible = "15 IMPOSIBLE OFFER";
-    char *decline   = "14 DECLINED OFFER ";
+    char *accept    = "ACCEPTED OFFER";
+    char *imposible = "IMPOSIBLE OFFER";
+    char *decline   = "DECLINED OFFER ";
     char *aux;
+    int offer[2];
 
     query.msg   = 1;
-    query.offer = NULL;
+    offer[0]    = strtol(msg+10, &aux, 10);
+    offer[1]    = strtol(aux+1, NULL, 10);
+    query.offer = offer;
+
+    printf("%d y %d \n", offer[0], offer[1]);
+    exit(0);
+
     respond     = db_handler(query);   
 
     switch (respond.msg) {
@@ -133,8 +136,5 @@ char * protocol(char * msg) {
     }
 
     return aux;
-
-
-
 
 }
