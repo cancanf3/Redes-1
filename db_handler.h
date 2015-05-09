@@ -11,6 +11,6 @@ typedef struct {
 }Query;
 
 void initialize();
-Query db_handler (Query db_handler);
+Query db_handler (Query);
 
 #endif

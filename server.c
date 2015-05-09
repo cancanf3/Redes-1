@@ -24,6 +24,8 @@ int main (int argc, char *argv[]) {
     int option = 0;
     int rows,columns;
 
+    initialize();
+
     if (argc == 1)
         error("Usage: server -f <filas> -c <col> [-p puerto] ");
 
@@ -74,53 +76,60 @@ int main (int argc, char *argv[]) {
     return 0;
 }
 
+
+
 void error (const char *msg) {
     perror(msg);
     exit(1);
 }
 
+
+
 void  queryHandler (int sock) {
-   int n;
-   char buffer[256];
-   char *buffers;
+    int  n;
+    char buffer[256];
+    char *buffer_respond;
+    int  respond_size;
 
-   bzero(buffer,256);
-   n = read(sock,buffer,255);
-   if (n < 0) 
-    error("Error: reading from socket");
+    bzero(buffer,256);
+    n = read(sock,buffer,255);
+    if (n < 0) 
+        error("Error: reading from socket");
    
-   buffers = protocol(buffer);
+    buffer_respond   = protocol(buffer);
+    respond_size     = strtol(buffer_respond, &buffer_respond, 10);
 
-   n = write(sock,"I got your message",18);
-   if (n < 0) 
-    error("Error: writing to socket");
+    n = write(sock,buffer_respond,respond_size+1);
+    if (n < 0) 
+        error("Error: writing to socket");
+
+    if (buffer_respond[0] == 'D')
+        free(buffer_respond);
 }
+
+
 
 char * protocol(char * msg) {
     // Query:
-    //GET CHAIR x y                              ~ Peticion de reservacion
+    //  GET CHAIR x y                                    ~ Peticion de reservacion
 
     // Respond:
-    //ACCEPTED  OFFER
-    //DECLINED  OFFER xx yy yy xx yy yy xx yy yy    ~ Rechazar reservacion
-    //IMPOSIBLE OFFER                              ~ No hay oferta disponible, vagon full
-    Query query;
-    Query respond;
-    char *accept    = "ACCEPTED OFFER";
-    char *imposible = "IMPOSIBLE OFFER";
-    char *decline   = "DECLINED OFFER ";
-    char *aux;
-    int offer[2];
+    //  14 ACCEPTED  OFFER                               ~ Acepta la peticion
+    //  ?? DECLINED  OFFER xx yy yy xx yy yy xx yy yy    ~ Rechazar reservacion (El largo del mensaje se calcula en tiempo de corrida)
+    //  15 IMPOSIBLE OFFER                               ~ No hay oferta disponible, vagon full
+    Query   query;
+    Query   respond;
+    char    *accept    = "15 ACCEPTED OFFER";
+    char    *imposible = "15 IMPOSIBLE OFFER";
+    char    *decline   = "DECLINED OFFER ";
+    char    *aux;
+    int     offer[2];
 
-    query.msg   = 1;
-    offer[0]    = strtol(msg+10, &aux, 10);
-    offer[1]    = strtol(aux+1, NULL, 10);
-    query.offer = offer;
-
-    printf("%d y %d \n", offer[0], offer[1]);
-    exit(0);
-
-    respond     = db_handler(query);   
+    query.msg       = 1;
+    offer[0]        = strtol(msg+10, &aux, 10);
+    offer[1]        = strtol(aux+1, NULL, 10);
+    query.offer     = offer;
+    respond         = db_handler(query);   
 
     switch (respond.msg) {
         case 1  :
@@ -130,8 +139,17 @@ char * protocol(char * msg) {
             aux = imposible;
             break;
         case 0  :
-            aux = (char *)malloc(sizeof(int)*respond.size_offer
-                +sizeof(decline));
+            aux = (char *)malloc((sizeof(char)*2+1)*respond.size_offer
+                +sizeof(decline)+sizeof(char)*4);
+            sprintf(aux, "%d ", 132);
+            strcat(aux, decline);
+            for (int i = 0 ; i < respond.size_offer; i++){
+                if (respond.offer[i] < 10)
+                    sprintf(aux+19+(i*3), "0%d ", respond.offer[i]);
+                else
+                    sprintf(aux+19+(i*3), "%d ", respond.offer[i]);
+            }
+            free(respond.offer);
             break;
     }
 
