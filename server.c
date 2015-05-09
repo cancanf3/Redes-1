@@ -111,7 +111,7 @@ void  queryHandler (int sock) {
 
 char * protocol(char * msg) {
     // Query:
-    //  GET CHAIR x y                                    ~ Peticion de reservacion
+    //  GET CHAIR x y                                       ~ Peticion de reservacion
 
     // Respond:
     //  14 ACCEPTED     OFFER                               ~ Acepta la peticion
@@ -129,7 +129,6 @@ char * protocol(char * msg) {
     char    *aux;
     int     offer[2];
 
-    printf("%s\n", msg);
     if ( strncmp(msg,"GET CHAIR",9) ) {
         aux = corrupt;
         return aux;
