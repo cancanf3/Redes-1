@@ -16,7 +16,7 @@ void queryHandler(int);
 
 int main (int argc, char *argv[]) {
 
-    int sock_fd, newsock_fd, port_no, pid;
+    int sock_fd, newsock_fd, port_no;
     socklen_t client_len;
     struct sockaddr_in server_addr, client_addr;
 
@@ -103,8 +103,10 @@ void  queryHandler (int sock) {
     if (n < 0) 
         error("Error: writing to socket");
 
-    if (buffer_respond[0] == 'D')
+    if (buffer_respond[1] == 'D'){
         free(buffer_respond);
+        printf("libero memoria\n");
+    }
 }
 
 
@@ -127,7 +129,7 @@ char * protocol(char * msg) {
     char    *nonexistent    = "17 NONEXISTENT OFFER";
     char    *corrupt        = "17 CORRUPTED MESSAGE";
     char    *aux;
-    int     offer[2];
+    int     offer[2], i;
 
     if ( strncmp(msg,"GET CHAIR",9) ) {
         aux = corrupt;
@@ -156,7 +158,7 @@ char * protocol(char * msg) {
                 +sizeof(decline)+sizeof(char)*4);
             sprintf(aux, "%d ", 132);
             strcat(aux, decline);
-            for (int i = 0 ; i < respond.size_offer; i++){
+            for (i = 0 ; i < respond.size_offer; i++){
                 if (respond.offer[i] < 10)
                     sprintf(aux+19+(i*3), "0%d ", respond.offer[i]);
                 else

@@ -9,9 +9,10 @@ int available;
  * initialize () -> void;
  */ 
 void initialize() {
+    int i,j;
     available = 40;
-    for (int i=0;i<10;i++) 
-        for (int j=0;j<40;j++)
+    for (i=0;i<10;i++) 
+        for (j=0;j<40;j++)
             db[i][j] = 0;
 }
 
@@ -52,9 +53,10 @@ Query db_handler(Query q){
     else {                                                                      // El puesto esta ocupado, se devuelve el mapa del vagon
         int *aux = (int *)malloc(sizeof(int)*available);
         int k    = 0;
+        int i,j;
 
-        for (int i = 0; i<10; i++)
-            for (int j=0; j<4; j++)
+        for (i = 0; i<10; i++)
+            for (j=0; j<4; j++)
                 if (db[i][j] == 0) {
                     aux[k]  = (i*10) + j;
                     k      += 1;
