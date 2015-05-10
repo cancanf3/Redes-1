@@ -12,17 +12,22 @@
 char *protocol (char *);
 void error(const char *);
 void queryHandler(int);
+int  exits;
 
+/* Es el main del programa, recibe los argumentos del puerto y otros dejados para futuras versiones
+ * El main inicializa la Base de datos y administra los sockets usados para la comunicacion
+ * main (argumentos) -> int
+ */
 
 int main (int argc, char *argv[]) {
 
-    int sock_fd, newsock_fd, port_no;
+    int       sock_fd, newsock_fd, port_no;
     socklen_t client_len;
-    struct sockaddr_in server_addr, client_addr;
-
-    port_no = 0;
-    int option = 0;
-    int rows,columns;
+    struct    sockaddr_in server_addr, client_addr;
+    int       option = 0;
+            port_no  = 0;
+            exits    = 0;
+    
 
     initialize();
 
@@ -31,17 +36,20 @@ int main (int argc, char *argv[]) {
 
     while ((option = getopt(argc, argv, "f:c:p:") ) != -1) {               
         switch (option) {
-            case 'f' : rows = atoi(optarg);
+            case 'f' :
                 break;
-            case 'c' : columns = atoi(optarg);
+            case 'c' :
                 break;
             case 'p' : port_no = atoi(optarg);
                 break;
-            default: error("Usage: server -f <filas> -c <col> [-p puerto] ");
+            case '?' : error("Usage: server -f <filas> -c <col> [-p puerto] ");
+                break;
 
         }
 
     }
+    if (optind < 5 || optind > 7)
+        error("Usage: server -f <filas> -c <col> [-p puerto] ");
 
     if (port_no <= 0) {
         port_no = 7557;         // Port by default
@@ -71,24 +79,34 @@ int main (int argc, char *argv[]) {
 
         queryHandler(newsock_fd);
         close(newsock_fd);
+
+        if (exits == 1)
+            break;
+
     }
+    printf("Server process ends.\n");
     close(sock_fd);
     return 0;
 }
 
 
-
+/* Funcion que Maneja los errores del servidor
+ * error (string) -> void
+ */
 void error (const char *msg) {
     perror(msg);
     exit(1);
 }
 
-
+/* Funcion que recibe los query y envia los reponds
+ * queryHandler(socket) -> void
+ */
 
 void  queryHandler (int sock) {
     int  n;
     char buffer[256];
     char *buffer_respond;
+    char *buffer_raw;
     int  respond_size;
 
     bzero(buffer,256);
@@ -96,20 +114,23 @@ void  queryHandler (int sock) {
     if (n < 0) 
         error("Error: reading from socket");
    
-    buffer_respond   = protocol(buffer);
-    respond_size     = strtol(buffer_respond, &buffer_respond, 10);
+    buffer_raw       = protocol(buffer);
+    respond_size     = strtol(buffer_raw, &buffer_respond, 10);
 
     n = write(sock,buffer_respond,respond_size+1);
     if (n < 0) 
         error("Error: writing to socket");
 
-    if (buffer_respond[1] == 'D'){
-        free(buffer_respond);
-        printf("libero memoria\n");
-    }
+    if (buffer_respond[1] == 'D')
+        free(buffer_raw);
+
+    if (buffer_respond[1] == 'I')
+        exits = 1;
 }
 
-
+/* Funcion que trabaja los querys del protocolo y genera responds para el cliente
+ * protocol(string) -> string
+ */ 
 
 char * protocol(char * msg) {
     // Query:

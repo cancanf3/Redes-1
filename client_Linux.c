@@ -7,21 +7,23 @@
 #include <netinet/in.h>
 #include <netdb.h> 
 
-void error(char *msg) { 
-    perror(msg);
-    exit(1);
-}
 
+void error(char);
+
+/* Es el main del programa, recibe los argumentos del puerto, las filas y las columnas
+ * El main construye el query y administra el socket usado para la comunicacion
+ * main (argumentos) -> int
+ */
 int main (int argc, char *argv[]) {
-    int sock_fd, port_no, n, i;
+
+    int    sock_fd, port_no, n, i;
     struct sockaddr_in server_addr;
     struct hostent *server = NULL;
+    char   buffer[256];
+    int    rows,columns;
+    int    option          = 0;
+           port_no         = 0;
 
-    int option = 0;
-    int rows,columns;
-    port_no = 0;
-
-    char buffer[256];
 
     if (argc == 1)
         error("Usage: client <ip-server> -p <port of service> -f <row> -c <col> ");
@@ -33,7 +35,7 @@ int main (int argc, char *argv[]) {
             case 'c' : columns = atoi(optarg);
                 break;
             case 'p' : port_no = atoi(optarg);
-                break;
+                break; 
             case '?' :
                 error("Usage: client <ip-server> -p <port of service> -f <row> -c <col> ");
                 break;
@@ -104,4 +106,12 @@ int main (int argc, char *argv[]) {
     close(sock_fd);
     return 0;
 
+}
+
+/* Funcion que Maneja los errores del servidor
+ * error (string) -> void
+ */
+void error(char *msg) { 
+    perror(msg);
+    exit(1);
 }
