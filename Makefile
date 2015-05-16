@@ -1,5 +1,5 @@
 CC 		= gcc
-CFLAGS 	= -g -Wall
+CFLAGS 	= -Wall -g 
 TARGET 	= server
 
 default:				server
