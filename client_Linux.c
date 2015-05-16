@@ -124,7 +124,7 @@ void connect_Handler() {
 
 void msg_Handler(char * buffer) {
     int x,y,n;
-    
+
     close(sock_fd);
     printf("\n\n    Server Respond ==>");
     if (!strncmp(buffer," DECLINED OFFER", 13)) {
@@ -162,7 +162,7 @@ void msg_Handler(char * buffer) {
     else if (!strncmp(buffer," NONEXISTENT OFFER", 16))
         printf(" Request out of range\n\n\n");
     else if (!strncmp(buffer," IMPOSIBLE OFFER", 14))
-        printf(" IMPOSIBLE OFFER.\n\n\n\n Wagon is full.\n");
+        printf(" IMPOSIBLE OFFER. Wagon is full.\n");
     else 
         printf("%s\n\n\n",buffer);
 
