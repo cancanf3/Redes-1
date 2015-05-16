@@ -16,7 +16,7 @@ struct hostent *server = NULL;
 
 
 /* Es el main del programa, recibe los argumentos del puerto, las filas y las columnas
- * El main construye el query y administra el socket usado para la comunicacion
+ * El main construye el query.
  * main (argumentos) -> int
  */
 int main (int argc, char *argv[]) {
@@ -92,8 +92,10 @@ void error(char *msg) {
     exit(1);
 }
 
-
-
+/* Es el manejador de conecciones, es el encargado de enlazar el socket del cliente 
+ * con el del servidor
+ * connect_Handler () -> void
+ */
 void connect_Handler() {
     struct sockaddr_in server_addr;
     int    i;
@@ -121,6 +123,10 @@ void connect_Handler() {
 
 }
 
+/* Es el manejador de mensajes, es el encargado de tratar los mensajes recibidos por
+ * el servidor y emitir una respuesta al usuario.
+ * msg_Handler () -> void
+ */
 
 void msg_Handler(char * buffer) {
     int x,y,n;
