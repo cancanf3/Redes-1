@@ -1,0 +1,76 @@
+Nombre y Apellidos: Jose Peña y Amin Arría
+Número de Carnet:   11-10775 y 11-10053
+Archivos que lo componen:
+
+    Protocolo GAC: 
+                    multiconnect_server.c   // MAIN del programa servidor
+                    db_handler.c            // Manejador de la base de datos
+                    db_handler.h            // header del manejador de la base
+                    client_Linux.c          // MAIN del programa cliente
+                    Makefile                // Makefile del proyecto
+                    protocolo.txt           // documento informativo del protocolo
+                    porotocolo.jpeg         // Imagen del diagrama del protocolo
+
+    RPC: /~ Falta completar ~/ 
+
+
+Que hace el programa:
+
+
+    Protocolo GAC:
+
+        Servidor: 
+            El servidor atiende peticiones de clientes queriendo reservar
+            asientos dentro de un vagón, luego de la primera petición de una 
+            silla cuando el vagón este full, el servidor responderá y terminará
+            su ejecución. Estos clientes son atendidos por Asincronía de entrada
+            y salída para poder atender a más de un cliente a la vez, respetando
+            el orden de llegada. Cabe destacar que se implementó el uso de flags
+            en el servidor para versiones futuras que admitan vagones de distintas
+            dimensiones, por ahora son solo de 40 puestos.
+
+        Cliente:
+            El cliente envía peticiones a un servidor para reservar sillas, sí 
+            la silla se encuentra ocupada el cliente volverá a preguntar al usuario
+            hasta que este pueda reservar una silla. 
+
+    RPC:
+
+        Servidor:
+            El servidor atiende peticiones de clientes queriendo reservar
+            asientos dentro de un vagón, luego de la primera petición de una 
+            silla cuando el vagón este full, el servidor responderá y terminará
+            su ejecución.
+
+        Cliente:
+            El cliente envía peticiones a un servidor para reservar sillas, sí 
+            la silla se encuentra ocupada el cliente volverá a preguntar al usuario
+            hasta que este pueda reservar una silla.
+
+
+Como se Ejecuta:
+
+    Protocolo GAC:
+
+        En principio, gracias al Makefile basta con usar:
+
+        ~$ make 
+
+        para producir el ejecutable del cliente y el servidor, pero puedes 
+        especificar cual quieres.
+
+        ~$ make server
+        ~$ make client
+
+        Ahora para ejecutar: 
+
+        ~$ server -f <filas> -c <col> [-p puerto]
+        ~$ client <ip-servidor> -p <puerto servicio> -f <fila> -c <col>
+
+        para eliminar los archivos:
+
+        ~$ make clean
+
+    RPC:
+
+        /~ Falta completar ~/

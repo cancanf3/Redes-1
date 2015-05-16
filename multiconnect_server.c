@@ -70,7 +70,7 @@ int main (int argc, char *argv[]) {
         sizeof(server_addr)) < 0 )
         error("Error: on bind.");
 
-    if(listen(master_socket,1) < 0)
+    if(listen(master_socket,10) < 0)
         error("Error: on Listen.");
 
     FD_ZERO(&active_fd_set);
