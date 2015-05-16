@@ -8,7 +8,7 @@
 #include <netdb.h> 
 
 
-void error(char);
+void error(char *);
 
 /* Es el main del programa, recibe los argumentos del puerto, las filas y las columnas
  * El main construye el query y administra el socket usado para la comunicacion
