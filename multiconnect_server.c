@@ -97,8 +97,8 @@ int main (int argc, char *argv[]) {
 
                     fprintf(stderr,
                          "Server: connect from host %s, port %hd.\n",
-                         inet_ntoa (client_addr.sin_addr),
-                         ntohs (client_addr.sin_port));
+                         inet_ntoa(client_addr.sin_addr),
+                         ntohs(client_addr.sin_port));
 
                     FD_SET(newsock_fd, &active_fd_set);
 
@@ -160,11 +160,13 @@ void  queryHandler (int sock) {
     if (n < 0) 
         error("Error: writing to socket");
 
+    if (buffer_respond[1] == 'I')
+        exits = 1;
+
     if (buffer_respond[1] == 'D')
         free(buffer_raw);
 
-    if (buffer_respond[1] == 'I')
-        exits = 1;
+
 }
 
 /* Funcion que trabaja los querys del protocolo y genera responds para el cliente
