@@ -121,7 +121,7 @@ int main (int argc, char *argv[]) {
         FD_CLR(i, &active_fd_set);
 
     }
-    printf("Server: Terminating process.\n");
+
     return 0;
 
 }
