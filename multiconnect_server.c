@@ -215,7 +215,7 @@ char * protocol(char * msg) {
             break;
         case 0  :
             aux = (char *)malloc((sizeof(char)*2+1)*respond.size_offer
-                +sizeof(char)*16+sizeof(char)*4);
+                +sizeof(char)*17+sizeof(char)*4);
             sprintf(aux, "%d ", 132);
             strcat(aux, decline);
             for (i = 0 ; i < respond.size_offer; i++){
