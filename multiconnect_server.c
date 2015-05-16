@@ -187,7 +187,7 @@ char * protocol(char * msg) {
     Query   respond;
     char    *accept         = "15 ACCEPTED OFFER";
     char    *imposible      = "15 IMPOSIBLE OFFER";
-    char    *decline        = "DECLINED OFFER ";
+    char    *decline        = "DECLINED OFFER";
     char    *nonexistent    = "17 NONEXISTENT OFFER";
     char    *corrupt        = "17 CORRUPTED MESSAGE";
     char    *aux;
@@ -217,7 +217,7 @@ char * protocol(char * msg) {
             break;
         case 0  :
             aux = (char *)malloc((sizeof(char)*2+1)*respond.size_offer
-                +sizeof(decline)+sizeof(char)*4);
+                +sizeof(char)*15+sizeof(char)*4);
             sprintf(aux, "%d ", 132);
             strcat(aux, decline);
             for (i = 0 ; i < respond.size_offer; i++){
