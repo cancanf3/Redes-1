@@ -28,7 +28,7 @@ int main (int argc, char *argv[]) {
     fd_set    active_fd_set, read_fd_set;
     int       option   = 0;
               port_no  = 0;
-              exits    = 0;
+              exits    = 1;
     
 
     initialize();
@@ -77,7 +77,7 @@ int main (int argc, char *argv[]) {
     FD_SET(master_socket, &active_fd_set);
 
 
-    while(1) { 
+    while(exits) { 
 
         read_fd_set = active_fd_set;
 
@@ -110,8 +110,6 @@ int main (int argc, char *argv[]) {
                     close(i);
                     FD_CLR(i, &active_fd_set);
 
-                    if (exits == 1)
-                        break;
                 }
             }
 
@@ -161,7 +159,7 @@ void  queryHandler (int sock) {
         error("Error: writing to socket");
 
     if (buffer_respond[1] == 'I')
-        exits = 1;
+        exits = 0;
 
     if (buffer_respond[1] == 'D')
         free(buffer_raw);
