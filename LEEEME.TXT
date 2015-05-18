@@ -27,7 +27,10 @@ Que hace el programa:
             y salída para poder atender a más de un cliente a la vez, respetando
             el orden de llegada. Cabe destacar que se implementó el uso de flags
             en el servidor para versiones futuras que admitan vagones de distintas
-            dimensiones, por ahora son solo de 40 puestos.
+            dimensiones, por ahora son solo de 40 puestos. 
+
+            Se implemento con el uso de una pila dinámica de sockets, permitiendo la concurrencia. El servidor tiene funciones que manejan la recepción y envío de los mensajes. Por ultimo, este servidor a tiene un reparto de funciones que administrá la base de datos, la cual esta representada como un arreglo, vale destacar que esta versión del programa tiene una representación inmutable, es decir el tamaño del 
+            vagon es fijo.
 
         Cliente:
             El cliente envía peticiones a un servidor para reservar sillas, sí 
