@@ -15,6 +15,9 @@ reserva_prog_1(char *host, int fila, int columna)
 	puesto  reservar_1_arg;
 	char * *result_2;
 	char *mostrar_disponibles_1_arg;
+	int seguir = 1;
+	
+	puesto cosas;
 
 	reservar_1_arg.fila = fila;
 	reservar_1_arg.columna = columna;
@@ -27,13 +30,13 @@ reserva_prog_1(char *host, int fila, int columna)
 		exit (1);
 	}
 #endif	/* DEBUG */
-
+	while(seguir--) {
 	result_1 = reservar_1(&reservar_1_arg, clnt);
 	if (result_1 == (int *) NULL) {
 		clnt_perror (clnt, "call failed");
 	}
 	else if(*result_1 == 0) {
-		printf("Puesto %d %d reservado\n", fila, columna);
+		printf("Puesto %d %d reservado\n", reservar_1_arg.fila, reservar_1_arg.columna);
 	}
 	else if(*result_1 == 1) {
 		fprintf(stderr, "El puesto pedido no esta en el rango valido\n");
@@ -46,14 +49,23 @@ reserva_prog_1(char *host, int fila, int columna)
 		}
 		int n = **result_2;
 		int i;
-		printf("Asientos disponibles %d: <fila, columna>\n", n/2);
+		char c = 'c';
+		printf("Asientos disponibles %d: <fila, columna>", n/2);
 		for(i=1; i<n; i=i+2) {
-			printf("<%c, %c>\n", result_2[0][i], result_2[0][i+1]);
+			if(result_2[0][i] != c) {
+				printf("\n");
+				c = result_2[0][i];
+			}
+			printf("<%c, %c>, ", result_2[0][i], result_2[0][i+1]);
 		}
+		printf("\n<fila> <columna>: ");
+		scanf("%d %d", &reservar_1_arg.fila, &reservar_1_arg.columna);
+		seguir = 1;
 	}
 	else if(*result_1 == 3) {
 		printf("El vagon esta full\n");
 		exit(3);
+	}
 	}
 #ifndef	DEBUG
 	clnt_destroy (clnt);
@@ -76,5 +88,6 @@ main (int argc, char *argv[])
 	columna = atoi(argv[3]);
 
 	reserva_prog_1 (host, fila, columna);
+
 exit (0);
 }

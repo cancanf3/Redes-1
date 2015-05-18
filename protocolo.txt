@@ -1,34 +1,17 @@
 Definiremos el protocolo GET A CHAIR (G.A.C):
 
     Servicios que proporciona el protocolo:
-
-        Este protocolo presta servicios de comunicación para la reservación de
-        sillas dentro de un vagón. Así mismo, maneja la disponibilidad de
-        puestos y advierte a los clientes cuando el vagón se quedó sin
-        disponibilidad.
+ 
+        Este protocolo presta servicios de comunicación para la reservación de sillas dentro de un vagón. Así mismo, maneja la disponibilidad de puestos y advierte a los clientes cuando el vagón se quedó sin disponibilidad.
 
 
     Suposiciones sobre el entorno donde se ejecuta el protocolo:
-
-        El protocolo fue creado para trabajar con el protocolo de transporte
-        TCP, esto permite una mayor fidelidad en la transmisión de paquetes.
-        En cuanto a los puertos, se decidió usar el puerto 7557 como puerto 
-        por defecto para las comunicaciones hacia el servidor, debido a que
-        es un puerto fuera del rango de los puerto-conocidos y esto evita
-        que su transmisión sea bloqueada en algunos escenarios. Aunque, se 
-        puede escoger cualquier puerto disponible para su uso.
-
-        El software implementado para trabajar con este protocolo fue creado
-        en SOs basados en unix y originalmente solo se planea trabajar en estos
-        entornos. se buscó implementarse con la mayor cantidad de librerías 
-        POSIX, pero a pesar de ello la herramienta que funciona como cliente
-        se tuvo que implementar de distintas maneras en entornos MAC y LINUX
-
-        La implementación del servidor permite la concurrencia, permite 
-        trabajar con múltiples clientes a la vez. Aunque, el orden de 
-        llegada de las peticiones se respeta. La concurrencia se implementó
-        con Asincronía de entrada y salida de información, debido al alto
-        overhead producido por los servidores multi-proceso y multi-hilos.
+ 
+        El protocolo fue creado para trabajar con el protocolo de transporte TCP, esto permite una mayor fidelidad en la transmisión de paquetes. En cuanto a los puertos, se decidió usar el puerto 7557 como puerto  por defecto para las comunicaciones hacia el servidor, debido a que es un puerto fuera del rango de los puerto-conocidos y esto evita que su transmisión sea bloqueada en algunos escenarios. Aunque, se  puede escoger cualquier puerto disponible para su uso.
+ 
+        El software implementado para trabajar con este protocolo fue creado en SOs basados en unix y originalmente solo se planea trabajar en estos entornos. se buscó implementarse con la mayor cantidad de librerías  POSIX, pero a pesar de ello la herramienta que funciona como cliente se tuvo que implementar de distintas maneras en entornos MAC y LINUX
+ 
+        La implementación del servidor permite la concurrencia, permite  trabajar con múltiples clientes a la vez. Aunque, el orden de  llegada de las peticiones se respeta. La concurrencia se implementó con Asincronía de entrada y salida de información, debido al alto overhead producido por los servidores multi-proceso y multi-hilos.
 
 
     Vocabulario de los mensajes utilizados en el protocolo:
@@ -46,22 +29,16 @@ Definiremos el protocolo GET A CHAIR (G.A.C):
                 // Respuesta positiva, confirmando la reservación de la silla
 
                 DECLINED OFFER XY XY XY...
-                // Respuesta negativa, rechazando la reservación debido a que
-                   el puesto pedido está ocupado y a anexado a la respuesta
-                   se encuentran todas las ofertas de sillas disponibles en el
-                   momento
+                // Respuesta negativa, rechazando la reservación debido a que el puesto pedido está ocupado y a anexado a la respuesta se encuentran todas las ofertas de sillas disponibles en el momento
 
                 IMPOSIBLE OFFER
-                // Respuesta negativa, rechazando la reservación debido a que
-                   no existen más puestos disponibles
+                // Respuesta negativa, rechazando la reservación debido a que no existen más puestos disponibles
 
                 NONEXISTENT OFFER
-                // Las opciones de filas y/o columnas sugeridas no se encuentra
-                   dentro de las disponibles en el vagón.
+                // Las opciones de filas y/o columnas sugeridas no se encuentra dentro de las disponibles en el vagón.
 
                 CORRUPTED MESSAGE
-                // El mensaje (query) recibido por el servidor no se encuentra 
-                   dentro del vocabulario del protocolo.
+                // El mensaje (query) recibido por el servidor no se encuentra dentro del vocabulario del protocolo.
 
     Formato de los mensajes del vocabulario del protocolo:
 
@@ -108,8 +85,7 @@ Definiremos el protocolo GET A CHAIR (G.A.C):
             }
 
             { servidor: DECLINED OFFER XY XY XY...
-            } // Este estado de comunicación obligaría a repetir el query del 
-                 cliente
+            } // Este estado de comunicación obligaría a repetir el query del cliente
 
         3.- Rechazamiento de una reservación(Vagón full):
 

@@ -28,35 +28,21 @@ Que hace el programa:
     Protocolo GAC:
 
         Servidor: 
-            El servidor atiende peticiones de clientes queriendo reservar
-            asientos dentro de un vagón, luego de la primera petición de una 
-            silla cuando el vagón este full, el servidor responderá y terminará
-            su ejecución. Estos clientes son atendidos por Asincronía de entrada
-            y salída para poder atender a más de un cliente a la vez, respetando
-            el orden de llegada. Cabe destacar que se implementó el uso de flags
-            en el servidor para versiones futuras que admitan vagones de distintas
-            dimensiones, por ahora son solo de 40 puestos. 
+            El servidor atiende peticiones de clientes queriendo reservar asientos dentro de un vagón, luego de la primera petición de una  silla cuando el vagón este full, el servidor responderá y terminará su ejecución. Estos clientes son atendidos por Asincronía de entrada y salída para poder atender a más de un cliente a la vez, respetando el orden de llegada. Cabe destacar que se implementó el uso de flags en el servidor para versiones futuras que admitan vagones de distintas dimensiones, por ahora son solo de 40 puestos. 
 
             Se implemento con el uso de una pila dinámica de sockets, permitiendo la concurrencia. El servidor tiene funciones que manejan la recepción y envío de los mensajes. Por ultimo, este servidor a tiene un reparto de funciones que administrá la base de datos, la cual esta representada como un arreglo, vale destacar que esta versión del programa tiene una representación inmutable, es decir el tamaño del 
             vagon es fijo.
 
-        Cliente:
-            El cliente envía peticiones a un servidor para reservar sillas, sí 
-            la silla se encuentra ocupada el cliente volverá a preguntar al usuario
-            hasta que este pueda reservar una silla. 
+        Cliente: 
+            El cliente envía peticiones a un servidor para reservar sillas, sí  la silla se encuentra ocupada el cliente volverá a preguntar al usuario hasta que este pueda reservar una silla. 
 
     RPC:
 
-        Servidor:
-            El servidor atiende peticiones de clientes queriendo reservar
-            asientos dentro de un vagón, luego de la primera petición de una 
-            silla cuando el vagón este full, el servidor responderá y terminará
-            su ejecución.
+        Servidor: 
+            El servidor atiende peticiones de clientes queriendo reservar asientos dentro de un vagón, luego de la primera petición de una  silla cuando el vagón este full, el servidor responderá y terminará su ejecución.
 
-        Cliente:
-            El cliente envía peticiones a un servidor para reservar sillas, sí 
-            la silla se encuentra ocupada el cliente volverá a preguntar al usuario
-            hasta que este pueda reservar una silla.
+        Cliente: 
+            El cliente envía peticiones a un servidor para reservar sillas, sí  la silla se encuentra ocupada el cliente volverá a preguntar al usuario hasta que este pueda reservar una silla.
 
 
 Como se Ejecuta:
@@ -67,8 +53,7 @@ Como se Ejecuta:
 
         ~$ make 
 
-        para producir el ejecutable del cliente y el servidor, pero puedes 
-        especificar cual quieres.
+        para producir el ejecutable del cliente y el servidor, pero puedes especificar cual quieres.
 
         ~$ make server
         ~$ make client
