@@ -11,7 +11,15 @@ Archivos que lo componen:
                     protocolo.txt           // documento informativo del protocolo
                     porotocolo.jpeg         // Imagen del diagrama del protocolo
 
-    RPC: /~ Falta completar ~/ 
+    RPC: 
+    	// usando "reserva.x" rpcgen genera el resto de los archivos
+    				reserva.x				// Identificación del programa, versión y sus funciones
+    				Makefile.reserva 		// Makefile del cliente y servidor
+    				reserva.h 				// Header generado por rpcgen
+    				reserva_clnt.c 			// Talon del cliente
+    				reserva_svc.c 			// Talon del servidor
+    				reserva_client.c 		// Programa del cliente
+    				reserva_server.c 		// Programa del servidor
 
 
 Que hace el programa:
@@ -73,4 +81,18 @@ Como se Ejecuta:
 
     RPC:
 
-        /~ Falta completar ~/
+    	Para generar los ejecutables basta correr el makefile:
+    		~$ make -f Makefile.reserva
+
+        Servidor:
+
+        	Para iniciar el servidor es necesario que este corriendo rpcbind:
+        		~$ sudo rpcbind &
+
+        	Para ejecutar el servidor:
+        		~$ ./reserva_server &
+
+        Cliente:
+
+        	Para ejecutar el cliente:
+        		~$ ./reserva_client <ip-servidor> <fila> <columna>
