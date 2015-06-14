@@ -96,9 +96,7 @@ int main (int argc, char *argv[]) {
                         error("Error: on accept.");
 
                     fprintf(stderr,
-                         "Server: connect from host %s, port %hd.\n",
-                         inet_ntoa(client_addr.sin_addr),
-                         ntohs(client_addr.sin_port));
+                         "Server: connection recieved");
 
                     FD_SET(newsock_fd, &active_fd_set);
 
